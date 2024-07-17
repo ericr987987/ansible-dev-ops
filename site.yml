@@ -1,0 +1,37 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: install updates ubuntu
+      apt:
+        upgrade: safe
+        update_cache: true
+      when: ansible distribution == "Ubuntu"
+
+    - name: install updates arch linux
+      pacman:
+        upgrade: yes
+        update_cache: yes
+      when: ansible_distribution == "Archlinux"
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: install apache and php packages for ubuntu servers
+      package:
+        name:
+          - apache2
+          - libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+    
+    - name: install apache and php packages for arch linux servers
+      package:
+        name:
+          - apache
+          - php-apache
+        state: latest
+      when: ansible_distribution == "Archlinux"
