@@ -2,7 +2,7 @@
 
 - hosts: all
   become: true
-  tasks:
+  pre_tasks:
 
     - name: install updates ubuntu
       apt:
@@ -35,3 +35,19 @@
           - php-apache
         state: latest
       when: ansible_distribution == "Archlinux"
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb for ubuntu servers
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install mariadb for arch linux servers
+    package:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Archlinux"
