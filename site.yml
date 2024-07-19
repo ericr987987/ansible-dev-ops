@@ -51,3 +51,19 @@
       name: mariadb
       state: latest
     when: ansible_distribution == "Archlinux"
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+    - name: install samba package for ubuntu servers
+      apt:
+        name: samba
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install samba package for arch linux servers
+      package:
+        name: samba
+        state: latest
+      when: ansible_distribution == "Archlinux"
