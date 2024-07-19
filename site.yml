@@ -5,12 +5,14 @@
   pre_tasks:
 
     - name: install updates ubuntu
+      tags: always
       apt:
         upgrade: safe
         update_cache: true
       when: ansible_distribution == "Ubuntu"
 
     - name: install updates arch linux
+      tags: always
       pacman:
         upgrade: yes
         update_cache: yes
@@ -21,6 +23,7 @@
   tasks:
 
     - name: install apache and php packages for ubuntu servers
+      tags: web,apache,apache2,ubuntu
       package:
         name:
           - apache2
@@ -29,6 +32,7 @@
       when: ansible_distribution == "Ubuntu"
     
     - name: install apache and php packages for arch linux servers
+      tags: web,apache,archlinux
       package:
         name:
           - apache
@@ -41,12 +45,14 @@
   tasks:
 
   - name: install mariadb for ubuntu servers
+    tags: db,mariadb,ubuntu
     apt:
       name: mariadb-server
       state: latest
     when: ansible_distribution == "Ubuntu"
 
   - name: install mariadb for arch linux servers
+    tags: db,mariadb,archlinux
     package:
       name: mariadb
       state: latest
@@ -57,12 +63,14 @@
   tasks:
 
     - name: install samba package for ubuntu servers
+      tags: file,samba,ubuntu
       apt:
         name: samba
         state: latest
       when: ansible_distribution == "Ubuntu"
 
     - name: install samba package for arch linux servers
+      tags: file,samba,archlinux
       package:
         name: samba
         state: latest
