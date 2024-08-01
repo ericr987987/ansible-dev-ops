@@ -1,0 +1,63 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+    - name: remove packages for ubuntu
+      package:
+        name:
+          - apache2
+          - libapache2-mod-php
+          - mariadb-server
+          - samba
+          - unzip
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+
+    - name: remove packages for arch linux
+      package:
+        name:
+          - apache
+          - php-apache
+          - mariadb
+          - samba
+          - unzip
+        state: absent
+      when: ansible_distribution == "Archlinux"
+
+    - name: remove license file from ubuntu
+      file:
+        path: /usr/local/bin/LICENSE.txt
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+
+    - name: remove license file from arch linux
+      file:
+        path: /usr/local/bin/LICENSE.txt
+        state: absent
+      when: ansible_distribution == "Archlinux"
+
+    - name: remove terraform file from ubuntu
+      file:
+        path: /usr/local/bin/terraform
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+
+    - name: remove terraform file from arch linux
+      file:
+        path: /usr/local/bin/terraform
+        state: absent
+      when: ansible_distribution == "Archlinux"
+
+    - name: remove index file from ubuntu
+      file:
+        path: /var/www/html/index.html
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+
+    - name: remove index file from arch linux
+      file:
+        path: /etc/httpd/conf/index.html
+        state: absent
+      when: ansible_distribution == "Archlinux"
