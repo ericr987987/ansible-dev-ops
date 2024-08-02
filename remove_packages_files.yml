@@ -26,6 +26,20 @@
         state: absent
       when: ansible_distribution == "Archlinux"
 
+    - name: stop and disable apache2 service for ubuntu
+      service:
+        name: apache2
+        state: stopped
+        enabled: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: stop and disable httpd service for arch linux
+      service:
+        name: httpd
+        state: stopped
+        enabled: false
+      when: ansible_distribution == "Archlinux"
+
     - name: remove license file from ubuntu
       file:
         path: /usr/local/bin/LICENSE.txt
