@@ -68,7 +68,7 @@
     - name: start and enable apache for arch linux
       tags: apache,archlinux
       service:
-        name: apache
+        name: httpd
         state: started
         enabled: yes
       when: ansible_distribution == "Archlinux"
@@ -87,7 +87,7 @@
       tags: apache
       copy:
         src: default_site.html
-        dest: /etc/httpd/conf/index.html
+        dest: /srv/http/index.html
         owner: root
         group: root
         mode: 0644
