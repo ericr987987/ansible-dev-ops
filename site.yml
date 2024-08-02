@@ -57,6 +57,22 @@
         state: latest
       when: ansible_distribution == "Archlinux"
 
+    - name: start and enable apache2 for ubuntu
+      tags: apache2,ubuntu
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: start and enable apache for arch linux
+      tags: apache,archlinux
+      service:
+        name: apache
+        state: started
+        enabled: yes
+      when: ansible_distribution == "Archlinux"
+
     - name: copy html file for site for ubuntu
       tags: apache2
       copy:
