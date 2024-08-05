@@ -4,6 +4,20 @@
   become: true
   tasks:
 
+    - name: stop and disable apache2 service for ubuntu
+      service:
+        name: apache2
+        state: stopped
+        enabled: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: stop and disable httpd service for arch linux
+      service:
+        name: httpd
+        state: stopped
+        enabled: false
+      when: ansible_distribution == "Archlinux"
+
     - name: remove packages for ubuntu
       package:
         name:
@@ -24,20 +38,6 @@
           - samba
           - unzip
         state: absent
-      when: ansible_distribution == "Archlinux"
-
-    - name: stop and disable apache2 service for ubuntu
-      service:
-        name: apache2
-        state: stopped
-        enabled: false
-      when: ansible_distribution == "Ubuntu"
-
-    - name: stop and disable httpd service for arch linux
-      service:
-        name: httpd
-        state: stopped
-        enabled: false
       when: ansible_distribution == "Archlinux"
 
     - name: remove license file from ubuntu
@@ -69,12 +69,6 @@
         path: /var/www/html/index.html
         state: absent
       when: ansible_distribution == "Ubuntu"
-
-    - name: remove index file from arch linux
-      file:
-        path: /etc/httpd/conf/index.html
-        state: absent
-      when: ansible_distribution == "Archlinux"
 
     - name: remove index file from arch linux
       file:
