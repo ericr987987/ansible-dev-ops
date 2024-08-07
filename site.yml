@@ -73,6 +73,15 @@
         enabled: yes
       when: ansible_distribution == "Archlinux"
 
+    - name: change email address for admin for ubuntu
+      tags: apache2,ubuntu
+      lineinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: '^ServerAdmin'
+        line: ServerAdmin emrwo@emrwo.com
+      when: ansible_distribution == "Ubuntu"
+      register: apache2
+
     - name: copy html file for site for ubuntu
       tags: apache2
       copy:
