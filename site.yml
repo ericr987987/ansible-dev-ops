@@ -82,6 +82,13 @@
       when: ansible_distribution == "Ubuntu"
       register: apache2
 
+    - name: restart apache2 for ubuntu
+      tags: apache2,ubuntu
+      service:
+        name: apache2
+        state: restarted
+      when: apache2.changed
+
     - name: copy html file for site for ubuntu
       tags: apache2
       copy:
