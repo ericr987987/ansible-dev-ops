@@ -40,6 +40,13 @@
         state: absent
       when: ansible_distribution == "Archlinux"
 
+    - name: remove email address for admin for ubuntu
+      lineinfile:
+        path: /etc/apache2/sites-available/000-default.conf
+        regexp: '^ServerAdmin'
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+
     - name: remove license file from ubuntu
       file:
         path: /usr/local/bin/LICENSE.txt
