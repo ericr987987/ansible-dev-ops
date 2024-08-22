@@ -4,19 +4,46 @@
   become: true
   pre_tasks:
 
-    - name: install updates ubuntu
+    - name: update repository cache for ubuntu
       tags: always
       apt:
-        upgrade: safe
+#        upgrade: safe
         update_cache: true
+      changed_when: false
       when: ansible_distribution == "Ubuntu"
 
-    - name: install updates arch linux
+    - name: update repository cache arch linux
       tags: always
       pacman:
-        upgrade: yes
+#        upgrade: yes
         update_cache: yes
+      changed_when: false
       when: ansible_distribution == "Archlinux"
+
+- hosts: all
+  become: true
+  tasks:
+
+#  - name: create emrwo user
+#    tags: always
+#    user:
+#      name: emrwo
+#      groups: root
+
+  - name: add ssh key for emrwo
+    tags: always
+    authorized_key:
+      user: emrwo
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB0yyvRfKdGfeoG+spuXHptTI7Gn2Nl8fAB2WX44fSR ansible"
+
+#  - name: add sudoers file for emrwo
+#    tags: always
+#    copy:
+#      src: sudoer_emrwo
+#      dest: /etc/sudoers.d/emrwo
+#      owner: root
+#      group: root
+#      mode: 0440
 
 - hosts: workstations
   become: true
