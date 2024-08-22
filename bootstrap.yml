@@ -1,0 +1,44 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+    - name: install updates ubuntu
+      tags: always
+      apt:
+        upgrade: safe
+        update_cache: true
+      when: ansible_distribution == "Ubuntu"
+
+    - name: install updates arch linux
+      tags: always
+      pacman:
+        upgrade: yes
+        update_cache: yes
+      when: ansible_distribution == "Archlinux"
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create emrwo user
+    tags: always
+    user:
+      name: emrwo
+      groups: root
+
+  - name: add ssh key for emrwo
+    tags: always
+    authorized_key:
+      user: emrwo
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB0yyvRfKdGfeoG+spuXHptTI7Gn2Nl8fAB2WX44fSR ansible"
+
+  - name: add sudoers file for emrwo
+    tags: always
+    copy:
+      src: sudoer_emrwo
+      dest: /etc/sudoers.d/emrwo
+      owner: root
+      group: root
+      mode: 0440
