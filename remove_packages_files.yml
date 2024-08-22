@@ -82,3 +82,8 @@
         path: /srv/http/index.html
         state: absent
       when: ansible_distribution == "Archlinux"
+
+#    - name: remove emrwo user
+#      user:
+#        name: emrwo
+#        state: absent
