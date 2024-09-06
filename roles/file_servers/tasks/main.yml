@@ -1,0 +1,13 @@
+- name: install samba package for ubuntu servers
+  tags: file,samba,ubuntu
+  apt:
+    name: samba
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install samba package for arch linux servers
+  tags: file,samba,archlinux
+  package:
+    name: samba
+    state: latest
+  when: ansible_distribution == "Archlinux"
