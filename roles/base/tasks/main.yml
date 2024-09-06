@@ -1,0 +1,4 @@
+- name: add ssh key for emrwo
+  authorized_key:
+    user: emrwo
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB0yyvRfKdGfeoG+spuXHptTI7Gn2Nl8fAB2WX44fSR ansible"
