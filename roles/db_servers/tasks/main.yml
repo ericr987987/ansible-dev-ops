@@ -1,0 +1,13 @@
+- name: install mariadb for ubuntu servers
+  tags: db,mariadb,ubuntu
+  apt:
+    name: mariadb-server
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install mariadb for arch linux servers
+  tags: db,mariadb,archlinux
+  package:
+    name: mariadb
+    state: latest
+  when: ansible_distribution == "Archlinux"
