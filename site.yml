@@ -1,173 +1,44 @@
 ---
-
+ 
 - hosts: all
   become: true
   pre_tasks:
-
-    - name: update repository cache for ubuntu
-      tags: always
-      apt:
-#        upgrade: safe
-        update_cache: true
-      changed_when: false
-      when: ansible_distribution == "Ubuntu"
-
-    - name: update repository cache arch linux
-      tags: always
-      pacman:
-#        upgrade: yes
-        update_cache: yes
-      changed_when: false
-      when: ansible_distribution == "Archlinux"
-
-- hosts: all
-  become: true
-  tasks:
-
-#  - name: create emrwo user
-#    tags: always
-#    user:
-#      name: emrwo
-#      groups: root
-
-  - name: add ssh key for emrwo
+ 
+  - name: update repository cache for ubuntu
     tags: always
-    authorized_key:
-      user: emrwo
-      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB0yyvRfKdGfeoG+spuXHptTI7Gn2Nl8fAB2WX44fSR ansible"
-
-#  - name: add sudoers file for emrwo
-#    tags: always
-#    copy:
-#      src: sudoer_emrwo
-#      dest: /etc/sudoers.d/emrwo
-#      owner: root
-#      group: root
-#      mode: 0440
-
-- hosts: workstations
-  become: true
-  tasks:
-
-    - name: install unzip
-      package:
-        name: unzip
-    
-    - name: install terraform
-      unarchive:
-        src: https://releases.hashicorp.com/terraform/1.9.3/terraform_1.9.3_linux_amd64.zip
-        dest: /usr/local/bin
-        remote_src: yes
-        mode: 0755
-        owner: root
-        group: root
-
-- hosts: web_servers
-  become: true
-  tasks:
-
-    - name: install apache and php packages for ubuntu servers
-      tags: web,apache,apache2,ubuntu
-      package:
-        name:
-          - apache2
-          - libapache2-mod-php
-        state: latest
-      when: ansible_distribution == "Ubuntu"
-    
-    - name: install apache and php packages for arch linux servers
-      tags: web,apache,archlinux
-      package:
-        name:
-          - apache
-          - php-apache
-        state: latest
-      when: ansible_distribution == "Archlinux"
-
-    - name: start and enable apache2 for ubuntu
-      tags: apache2,ubuntu
-      service:
-        name: apache2
-        state: started
-        enabled: yes
-      when: ansible_distribution == "Ubuntu"
-
-    - name: start and enable apache for arch linux
-      tags: apache,archlinux
-      service:
-        name: httpd
-        state: started
-        enabled: yes
-      when: ansible_distribution == "Archlinux"
-
-    - name: change email address for admin for ubuntu
-      tags: apache2,ubuntu
-      lineinfile:
-        path: /etc/apache2/sites-available/000-default.conf
-        regexp: '^ServerAdmin'
-        line: ServerAdmin emrwo@emrwo.com
-      when: ansible_distribution == "Ubuntu"
-      register: apache2
-
-    - name: restart apache2 for ubuntu
-      tags: apache2,ubuntu
-      service:
-        name: apache2
-        state: restarted
-      when: apache2.changed
-
-    - name: copy html file for site for ubuntu
-      tags: apache2
-      copy:
-        src: default_site.html
-        dest: /var/www/html/index.html
-        owner: root
-        group: root
-        mode: 0644
-      when: ansible_distribution == "Ubuntu"
-
-    - name: copy html file for site for arch linux
-      tags: apache
-      copy:
-        src: default_site.html
-        dest: /srv/http/index.html
-        owner: root
-        group: root
-        mode: 0644
-      when: ansible_distribution == "Archlinux"
-
-- hosts: db_servers
-  become: true
-  tasks:
-
-  - name: install mariadb for ubuntu servers
-    tags: db,mariadb,ubuntu
     apt:
-      name: mariadb-server
-      state: latest
+      update_cache: true
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
 
-  - name: install mariadb for arch linux servers
-    tags: db,mariadb,archlinux
-    package:
-      name: mariadb
-      state: latest
+  - name: update repository cache arch linux
+    tags: always
+    pacman:
+      update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Archlinux"
-
+ 
+- hosts: all
+  become: true
+  roles:
+    - base
+    
+- hosts: workstations
+  become: true
+  roles:
+    - workstations
+ 
+- hosts: web_servers
+  become: true
+  roles:
+    - web_servers
+ 
+- hosts: db_servers
+  become: true
+  roles:
+    - db_servers
+ 
 - hosts: file_servers
   become: true
-  tasks:
-
-    - name: install samba package for ubuntu servers
-      tags: file,samba,ubuntu
-      apt:
-        name: samba
-        state: latest
-      when: ansible_distribution == "Ubuntu"
-
-    - name: install samba package for arch linux servers
-      tags: file,samba,archlinux
-      package:
-        name: samba
-        state: latest
-      when: ansible_distribution == "Archlinux"
+  roles:
+    - file_servers
