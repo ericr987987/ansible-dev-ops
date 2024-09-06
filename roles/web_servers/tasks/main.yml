@@ -1,0 +1,69 @@
+- name: install apache and php packages for ubuntu servers
+  tags: web,apache,apache2,ubuntu
+  package:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install apache and php packages for arch linux servers
+  tags: web,apache,archlinux
+  package:
+    name:
+      - apache
+      - php-apache
+    state: latest
+  when: ansible_distribution == "Archlinux"
+
+- name: start and enable apache2 for ubuntu
+  tags: apache2,ubuntu
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: start and enable apache for arch linux
+  tags: apache,archlinux
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "Archlinux"
+
+- name: change email address for admin for ubuntu
+  tags: apache2,ubuntu
+  lineinfile:
+    path: /etc/apache2/sites-available/000-default.conf
+    regexp: '^ServerAdmin'
+    line: ServerAdmin emrwo@emrwo.com
+  when: ansible_distribution == "Ubuntu"
+  register: apache2
+
+- name: restart apache2 for ubuntu
+  tags: apache2,ubuntu
+  service:
+    name: apache2
+    state: restarted
+  when: apache2.changed
+
+- name: copy html file for site for ubuntu
+  tags: apache2
+  copy:
+    src: default_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Ubuntu"
+
+- name: copy html file for site for arch linux
+  tags: apache
+  copy:
+    src: default_site.html
+    dest: /srv/http/index.html
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == "Archlinux"
