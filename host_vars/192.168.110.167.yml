@@ -1,3 +1,5 @@
 apache_package_name: apache
 apache_service: httpd
 php_package_name: php-apache
+ssh_users: "ericr987987 emrwo"
+ssh_template_file: sshd_config_archlinux.j2

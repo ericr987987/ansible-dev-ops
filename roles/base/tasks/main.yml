@@ -2,3 +2,13 @@
   authorized_key:
     user: emrwo
     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPB0yyvRfKdGfeoG+spuXHptTI7Gn2Nl8fAB2WX44fSR ansible"
+
+- name: openssh | generate sshd_config file from template
+  tags: ssh
+  template:
+    src: "{{ ssh_template_file }}"
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_sshd
